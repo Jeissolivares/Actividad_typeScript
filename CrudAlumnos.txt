@@ -1,0 +1,198 @@
+class Estudiantes{
+    id:number = 0;
+    nombre:string = '';
+    apellidos:string = '';
+    curso:number = 11;
+    alumnos:Array<any> = [];
+
+    constructor(){
+
+    }
+};
+
+interface IAlumnos extends Estudiantes {
+    getAll():void;
+
+    getById(id:number):void;
+
+    getByName(nombre:string):void;
+
+    create(id:number, nombre:string, apellidos:string, curso:number, activo:boolean):void;
+
+    update(id:number, nombre:string, apellidos:string, curso:number, activo:boolean):void;
+
+    delete(id:number):void;
+};
+
+class RepositorioAlumnos implements IAlumnos{
+    
+    id = 0;
+    nombre = '';
+    apellidos =  '';
+    curso = 0;
+   
+    alumnos = [{"id": 1, "nombre": "Jeisson", "apellido": "Olivares", "curso": 11}];
+
+    getAll(): void {
+       try{
+            var datos:string = '';
+          for (let item of this.alumnos){
+                datos = datos +
+                `id: ${item.id}; nombre: ${item.nombre}; apellido: ${item.apellido}; curso: ${item.curso} \n`;
+       };
+       
+        if (datos) {
+            alert(datos);
+        } else {
+            alert("No hay alumnos en la base de datos");
+        };
+       }catch (error) {
+            alert(error);
+       }
+    };
+
+    getById(id:number): void {
+
+        try{
+             let item:any = this.alumnos.find(i => i.id == id);
+         
+            if(item.id == id){
+                alert(
+                `id: ${item.id}; nombre: ${item.nombre}; apellido: ${item.apellido}; curso: ${item.curso}`
+            );
+            }else{
+                alert('El alumno no se encuentra en la base de datos');
+            }
+        }catch(error) {
+            alert(error);
+        };
+       
+    };
+    getByName(nombre:string): void {
+         try{
+             let item:any = this.alumnos.find(i => i.nombre == nombre);
+            if(nombre == item.nombre){
+                alert(
+                `id: ${item.id}; nombre: ${item.nombre}; apellido: ${item.apellido}; curso: ${item.curso}`
+            );
+            }else{
+                alert('El alumno no se encuentra en la base de datos');
+            }
+         }catch (error){
+            alert(error);
+         };
+    };
+
+    create(id:number, nombre:string, apellidos:string, curso:number, activo:boolean): void {
+            try{
+                let data:any = {
+                id,
+                nombre,
+                apellido: apellidos,
+                curso
+            };
+        this.alumnos.push(data); 
+        alert("Registro Creado"); 
+        } catch (error){
+
+        }
+    };
+
+    update(id:number, nombre:string, apellidos:string, curso:number, activo:boolean): void {
+        
+        try {
+            let item:any = this.alumnos.find(i => i.id == id);
+            if(item){
+                item.id = id;
+                item.nombre = nombre;
+                item.apellido = apellidos;
+                item.curso = curso;
+                alert("Registro Actualizado");
+            }else{
+                alert('El alumno no se encuentra en la base de datos');
+            }
+
+        }catch (error){
+            alert(error);
+        }
+    };
+
+    delete(id:number): void {
+
+        try{
+            let item:any = this.alumnos.find(i => i.id == id);
+
+            if(id == item.id){
+                this.alumnos.pop();
+                alert("Alumno Eliminado");
+            }else{
+                alert('El alumno no se encuentra en la base de datos');
+            };
+        }catch (error){
+            alert(error);
+        }
+        
+    };
+};
+
+let op:number = 0;
+    var id:number = 0;
+    var nombre:string = '';
+    var apellidos:string = '';
+    var curso:number = 11;
+    var activo:boolean = true;
+let objRepositorio = new RepositorioAlumnos();
+
+do{
+    op = Number(prompt(`
+    :::::::::::::Crud Alumnos::::::::::::::::::
+    Seleccione la operacion que desea realizar: 
+    1. Mostrar Todos 
+    2. Mostrar por Id
+    3. Mostrar por nombre
+    4. Crear 
+    5. Actualizar 
+    6. Eliminar 
+    7. Salir`));
+
+    switch (op) {
+        case 1:
+            objRepositorio.getAll();
+            break;
+        case 2:
+            id = Number(prompt('Ingrese el id del alumno a buscar'));
+            objRepositorio.getById(id);
+            break;
+        case 3:
+            nombre = String(prompt('Ingrese el nombre del alunmo a buscar'));
+            objRepositorio.getByName(nombre);
+            break;
+        case 4:
+            id = Number(prompt('Ingrese el id del alumno'));
+            nombre = String(prompt('Ingrese el nombre del alunmo'));
+            apellidos = String(prompt('Ingrese el apellido del alumno'));
+            curso = Number(prompt('Ingrese el curso del alumno'));
+            activo = Boolean(prompt('Ingrese si el alumno está activo o no'));
+            objRepositorio.create(id,nombre, apellidos, curso, activo);
+            break;
+        case 5:
+            id = Number(prompt('Ingrese el id del alumno'));
+            nombre = String(prompt('Ingrese el nombre del alunmo'));
+            apellidos = String(prompt('Ingrese el apellido del alumno'));
+            curso = Number(prompt('Ingrese el curso del alumno'));
+            activo = Boolean(prompt('Ingrese si el alumno está activo o no'));
+            objRepositorio.update(id,nombre,apellidos,curso,activo);
+            break;
+        case 6:
+                id = Number(prompt('Ingrese el id del alumno a eliminar'));
+                objRepositorio.delete(id);
+            break;
+        case 7:
+            alert('Hasta la proxima');
+            break;
+        default:
+        alert('Ingrese una opcion valida');
+            break;
+    }
+
+}while(op != 7);
